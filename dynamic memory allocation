@@ -1,0 +1,42 @@
+#include <cstdio>
+#include <cstdlib>
+#include <string>
+
+int data[100];
+int no_data = -1;
+
+void init_waypoints(const std::string& file_path) {
+    FILE* fp;
+    int result;
+
+    printf("waypoint file: %s\n", file_path.c_str());
+
+    errno_t err = fopen_s(&fp, file_path.c_str(), "r");
+    if (err != 0 || fp == NULL) {
+        printf("File does not exist!\n");
+        exit(1);
+    }
+    else {
+        no_data = 0;
+
+        while ((result = fscanf_s(fp, "%d", &data[no_data])) != EOF) {
+            if (result == 1) {
+                no_data++;
+                if (no_data >= 100) {
+                    printf("Error: Exceeded array size of 100.\n");
+                    break;
+                }
+            }
+        }
+
+        fclose(fp);
+    }
+
+    printf("Total data points read: %d\n", no_data);
+}
+
+int main(void) {
+    std::string file_name = R"(C:\Users\user\Desktop\202415040\Project2\456465.txt)";
+    init_waypoints(file_name);
+    return 0;
+}
